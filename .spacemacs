@@ -32,7 +32,8 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(javascript
+   '(toml
+     javascript
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
@@ -92,10 +93,9 @@ This function should only modify configuration layer settings."
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages '(jupyter
                                       ob-async
-                                      ob-jupyter
+                                      ;;ob-jupyter
                                       obsidian
                                       smtpmail
-                                      smudge
                                       lsp-java
                                       javadoc-lookup
                                       zmq
@@ -267,7 +267,7 @@ It should only modify the values of Spacemacs settings."
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(gruber-darker
-                         ef-cyprus)
+                         hemisu-light)
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
    ;; `all-the-icons', `custom', `doom', `vim-powerline' and `vanilla'. The
@@ -287,8 +287,8 @@ It should only modify the values of Spacemacs settings."
    ;; fixed-pitch faces. The `:size' can be specified as
    ;; a non-negative integer (pixel size), or a floating-point (point size).
    ;; Point size is recommended, because it's device independent. (default 10.0)
-   dotspacemacs-default-font '("Iosevka Term"
-                               :size 11.0
+   dotspacemacs-default-font '("Px437 IBM VGA9"
+                               :size 12.0
                                :weight regular
                                :width normal)
 
@@ -465,7 +465,7 @@ It should only modify the values of Spacemacs settings."
    ;;   :size-limit-kb 1000)
    ;; When used in a plist, `visual' takes precedence over `relative'.
    ;; (default nil)
-   dotspacemacs-line-numbers t
+   dotspacemacs-line-numbers nil
 
    ;; Code folding method. Possible values are `evil', `origami' and `vimish'.
    ;; (default 'evil)
@@ -617,7 +617,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
 
   ;; vim-powerline
-  (setq dotspacemacs-mode-line-theme 'spacemacs)
+  (setq dotspacemacs-mode-line-theme 'vim-powerline)
 
   ;; mu4e settings
   (setq mu4e-update-interval 100)
@@ -662,43 +662,6 @@ before packages are loaded."
      (latex . t)
      (shell .t)))
 
-  ;; smudge
-  (use-package smudge
-    :bind-keymap ("C-c ." . smudge-command-map)
-    :config
-    (setq 'smudge-oauth2-client-secret "db93f3e1c62f400398288ad8b170c477"
-          smudge-oauth2-client-id     "8c1afb8dc15a4cd1a564e69d3ee03a56"
-          smudge-player-status-refresh-interval 10
-          smudge-player-use-transient-map t))
-
-  ;; A hydra for controlling spotify.
-  (defhydra hydra-spotify (:hint nil)
-
-    "
-^Search^                  ^Control^               ^Manage^
-^^^^^^^^-----------------------------------------------------------------
-_t_: Track               _SPC_: Play/Pause        _+_: Volume up
-_m_: My Playlists        _n_  : Next Track        _-_: Volume down
-_f_: Featured Playlists  _p_  : Previous Track    _x_: Mute
-_u_: User Playlists      _r_  : Repeat            _d_: Device
-^^                       _s_  : Shuffle           _q_: Quit
-"
-    ("t" smudge-track-search :exit t)
-    ("m" smudge-my-playlists :exit t)
-    ("f" smudge-featured-playlists :exit t)
-    ("u" smudge-user-playlists :exit t)
-    ("SPC" smudge-controller-toggle-play :exit nil)
-    ("n" smudge-controller-next-track :exit nil)
-    ("p" smudge-controller-previous-track :exit nil)
-    ("r" smudge-controller-toggle-repeat :exit nil)
-    ("s" smudge-controller-toggle-shuffle :exit nil)
-    ("+" smudge-controller-volume-up :exit nil)
-    ("-" smudge-controller-volume-down :exit nil)
-    ("x" smudge-controller-volume-mute-unmute :exit nil)
-    ("d" smudge-select-device :exit nil)
-    ("q" quit-window "quit" :color blue))
-
-  (bind-key "a" 'hydra-spotify/body smudge-command-map)
 
   ;; lsp-java
   (require 'lsp-java)
@@ -732,9 +695,9 @@ _u_: User Playlists      _r_  : Repeat            _d_: Device
 
   ;; gruber-darker theme
   (add-to-list 'custom-theme-load-path
-               "/home/bask_verhu/.emacs.d/themes/gruber-darker-theme/")
-  ;; W3M Configuration
+               "home/bask_verhu/.emacs.d/themes/gruber-darker-theme/")
 
+  ;; W3M Configuration
   (setq w3m-home-page "https://www.google.com")
   ;; W3M Home Page
   (setq w3m-default-display-inline-images t)
@@ -874,6 +837,7 @@ This function is called at the very end of Spacemacs initialization."
    '(global-term-cursor-mode t)
    '(gnus-summary-resend-default-address nil)
    '(helm-default-external-file-browser "firefox")
+   '(helm-surfraw-default-browser-function 'firefox)
    '(importmagic-python-interpreter
      "home/bask_verhu/.conda/envs/myenv/CS314_spacemacs/bin/python2.7")
    '(message-send-mail-function 'message-send-mail-with-sendmail)
@@ -905,13 +869,25 @@ This function is called at the very end of Spacemacs initialization."
        (wl . wl-other-frame)))
    '(org-startup-with-latex-preview t)
    '(package-selected-packages
-     '(cdlatex company-auctex company-math company-reftex evil-tex auctex consult math-symbol-lists importmagic ob-async xah-fly-keys jupyter websocket zmq blacken code-cells company-anaconda anaconda-mode conda cython-mode helm-pydoc epc ctable concurrent live-py-mode lsp-pyright pip-requirements pipenv load-env-vars pippel poetry py-isort pydoc pyenv-mode pythonic pylookup pytest pyvenv sphinx-doc yapfify ranger groovy-imports pcache groovy-mode maven-test-mode mvn doom-modeline shrink-path nerd-icons ox-pandoc pandoc-mode smudge oauth2 emms helm-spotify-plus multi spotify javadoc-lookup lsp-java elgrep obsidian add-node-modules-path counsel-gtags counsel swiper ivy ggtags impatient-mode import-js grizzl js-doc js2-refactor multiple-cursors livid-mode nodejs-repl npm-mode prettier-js skewer-mode js2-mode simple-httpd tern web-beautify helm-mu w3m pdf-view-restore pdf-tools tablist realgud test-simple loc-changes load-relative dap-mode lsp-docker bui ccls company-c-headers company-rtags company-ycmd cpp-auto-include disaster flycheck-rtags flycheck-ycmd gendoxy google-c-style helm-rtags rtags ycmd request-deferred afternoon-theme alect-themes ample-theme ample-zen-theme anti-zenburn-theme apropospriate-theme badwolf-theme birds-of-paradise-plus-theme bubbleberry-theme busybee-theme cherry-blossom-theme chocolate-theme clues-theme color-theme-sanityinc-solarized color-theme-sanityinc-tomorrow cyberpunk-theme dakrone-theme darkmine-theme darkokai-theme darktooth-theme django-theme doom-themes dracula-theme ef-themes espresso-theme exotica-theme eziam-themes farmhouse-themes flatland-theme flatui-theme gandalf-theme gotham-theme grandshell-theme gruber-darker-theme gruvbox-theme hc-zenburn-theme hemisu-theme heroku-theme inkpot-theme ir-black-theme jazz-theme jbeans-theme kaolin-themes light-soap-theme lush-theme madhat2r-theme majapahit-themes material-theme minimal-theme modus-themes moe-theme molokai-theme monochrome-theme monokai-theme mustang-theme naquadah-theme noctilux-theme obsidian-theme occidental-theme oldlace-theme omtose-phellack-themes organic-green-theme phoenix-dark-mono-theme phoenix-dark-pink-theme planet-theme professional-theme purple-haze-theme railscasts-theme rebecca-theme reverse-theme seti-theme smyx-theme soft-charcoal-theme soft-morning-theme soft-stone-theme solarized-theme soothe-theme autothemer spacegray-theme subatomic-theme subatomic256-theme sublime-themes sunny-day-theme tango-2-theme tango-plus-theme tangotango-theme tao-theme toxi-theme twilight-anti-bright-theme twilight-bright-theme twilight-theme ujelly-theme underwater-theme white-sand-theme zen-and-art-theme zenburn-theme zonokai-emacs auto-dictionary auto-yasnippet code-review emojify deferred a eat esh-help eshell-prompt-extras eshell-z evil-org flycheck-pos-tip pos-tip flyspell-correct-helm flyspell-correct gh-md git-link git-messenger git-modes git-timemachine gitignore-templates gnuplot helm-c-yasnippet helm-company company helm-git-grep helm-ls-git helm-lsp helm-org-rifle htmlize lsp-origami origami lsp-treemacs lsp-ui lsp-mode markdown-toc multi-term multi-vterm xref mwim org-cliplink org-contrib org-download org-mime org-pomodoro alert log4e gntp org-present org-projectile org-project-capture org-category-capture org-rich-yank orgit-forge orgit forge yaml markdown-mode ghub closql emacsql treepy org shell-pop smeargle terminal-here treemacs-magit magit with-editor transient magit-section unfill vterm yasnippet-snippets yasnippet ws-butler writeroom-mode winum which-key vundo volatile-highlights vim-powerline vi-tilde-fringe uuidgen undo-fu-session undo-fu treemacs-projectile treemacs-persp treemacs-icons-dired treemacs-evil toc-org term-cursor symon symbol-overlay string-inflection string-edit-at-point spacemacs-whitespace-cleanup spacemacs-purpose-popwin spaceline space-doc restart-emacs request rainbow-delimiters quickrun popwin pcre2el password-generator paradox overseer org-superstar open-junk-file nameless multi-line macrostep lorem-ipsum link-hint inspector info+ indent-guide hybrid-mode hungry-delete holy-mode hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt helm-xref helm-themes helm-swoop helm-purpose helm-projectile helm-org helm-mode-manager helm-make helm-descbinds helm-comint helm-ag google-translate golden-ratio flycheck-package flycheck-elsa flx-ido fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-evilified-state evil-escape evil-easymotion evil-collection evil-cleverparens evil-args evil-anzu eval-sexp-fu emr elisp-slime-nav elisp-demos elisp-def editorconfig dumb-jump drag-stuff dotenv-mode disable-mouse dired-quick-sort diminish devdocs define-word column-enforce-mode clean-aindent-mode centered-cursor-mode auto-highlight-symbol auto-compile all-the-icons aggressive-indent ace-link ace-jump-helm-line))
+     '(helm-w3m toml-mode cdlatex company-auctex company-math company-reftex evil-tex auctex consult math-symbol-lists importmagic ob-async xah-fly-keys jupyter websocket zmq blacken code-cells company-anaconda anaconda-mode conda cython-mode helm-pydoc epc ctable concurrent live-py-mode lsp-pyright pip-requirements pipenv load-env-vars pippel poetry py-isort pydoc pyenv-mode pythonic pylookup pytest pyvenv sphinx-doc yapfify ranger groovy-imports pcache groovy-mode maven-test-mode mvn doom-modeline shrink-path nerd-icons ox-pandoc pandoc-mode smudge oauth2 emms helm-spotify-plus multi spotify javadoc-lookup lsp-java elgrep obsidian add-node-modules-path counsel-gtags counsel swiper ivy ggtags impatient-mode import-js grizzl js-doc js2-refactor multiple-cursors livid-mode nodejs-repl npm-mode prettier-js skewer-mode js2-mode simple-httpd tern web-beautify helm-mu w3m pdf-view-restore pdf-tools tablist realgud test-simple loc-changes load-relative dap-mode lsp-docker bui ccls company-c-headers company-rtags company-ycmd cpp-auto-include disaster flycheck-rtags flycheck-ycmd gendoxy google-c-style helm-rtags rtags ycmd request-deferred afternoon-theme alect-themes ample-theme ample-zen-theme anti-zenburn-theme apropospriate-theme badwolf-theme birds-of-paradise-plus-theme bubbleberry-theme busybee-theme cherry-blossom-theme chocolate-theme clues-theme color-theme-sanityinc-solarized color-theme-sanityinc-tomorrow cyberpunk-theme dakrone-theme darkmine-theme darkokai-theme darktooth-theme django-theme doom-themes dracula-theme ef-themes espresso-theme exotica-theme eziam-themes farmhouse-themes flatland-theme flatui-theme gandalf-theme gotham-theme grandshell-theme gruvbox-theme hc-zenburn-theme hemisu-theme heroku-theme inkpot-theme ir-black-theme jazz-theme jbeans-theme kaolin-themes light-soap-theme lush-theme madhat2r-theme majapahit-themes material-theme minimal-theme modus-themes moe-theme molokai-theme monochrome-theme monokai-theme mustang-theme naquadah-theme noctilux-theme obsidian-theme occidental-theme oldlace-theme omtose-phellack-themes organic-green-theme phoenix-dark-mono-theme phoenix-dark-pink-theme planet-theme professional-theme purple-haze-theme railscasts-theme rebecca-theme reverse-theme seti-theme smyx-theme soft-charcoal-theme soft-morning-theme soft-stone-theme solarized-theme soothe-theme autothemer spacegray-theme subatomic-theme subatomic256-theme sublime-themes sunny-day-theme tango-2-theme tango-plus-theme tangotango-theme tao-theme toxi-theme twilight-anti-bright-theme twilight-bright-theme twilight-theme ujelly-theme underwater-theme white-sand-theme zen-and-art-theme zenburn-theme zonokai-emacs auto-dictionary auto-yasnippet code-review emojify deferred a eat esh-help eshell-prompt-extras eshell-z evil-org flycheck-pos-tip pos-tip flyspell-correct-helm flyspell-correct gh-md git-link git-messenger git-modes git-timemachine gitignore-templates gnuplot helm-c-yasnippet helm-company company helm-git-grep helm-ls-git helm-lsp helm-org-rifle htmlize lsp-origami origami lsp-treemacs lsp-ui lsp-mode markdown-toc multi-term multi-vterm xref mwim org-cliplink org-contrib org-download org-mime org-pomodoro alert log4e gntp org-present org-projectile org-project-capture org-category-capture org-rich-yank orgit-forge orgit forge yaml markdown-mode ghub closql emacsql treepy org shell-pop smeargle terminal-here treemacs-magit magit with-editor transient magit-section unfill vterm yasnippet-snippets yasnippet ws-butler writeroom-mode winum which-key vundo volatile-highlights vim-powerline vi-tilde-fringe uuidgen undo-fu-session undo-fu treemacs-projectile treemacs-persp treemacs-icons-dired treemacs-evil toc-org term-cursor symon symbol-overlay string-inflection string-edit-at-point spacemacs-whitespace-cleanup spacemacs-purpose-popwin spaceline space-doc restart-emacs request rainbow-delimiters quickrun popwin pcre2el password-generator paradox overseer org-superstar open-junk-file nameless multi-line macrostep lorem-ipsum link-hint inspector info+ indent-guide hybrid-mode hungry-delete holy-mode hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt helm-xref helm-themes helm-swoop helm-purpose helm-projectile helm-org helm-mode-manager helm-make helm-descbinds helm-comint helm-ag google-translate golden-ratio flycheck-package flycheck-elsa flx-ido fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-evilified-state evil-escape evil-easymotion evil-collection evil-cleverparens evil-args evil-anzu eval-sexp-fu emr elisp-slime-nav elisp-demos elisp-def editorconfig dumb-jump drag-stuff dotenv-mode disable-mouse dired-quick-sort diminish devdocs define-word column-enforce-mode clean-aindent-mode centered-cursor-mode auto-highlight-symbol auto-compile all-the-icons aggressive-indent ace-link ace-jump-helm-line))
    '(send-mail-function 'sendmail-send-it)
    '(server-mode t)
+   '(sh-shell-file "/usr/bin/zsh")
+   '(shell-default-height 60)
+   '(shell-file-name "/usr/bin/zsh")
+   '(shell-pop-full-span t t)
+   '(shell-pop-shell-type
+     '("ansi-term" "*Default-ansi-term*"
+       (lambda nil
+         (ansi-term shell-pop-term-shell))))
+   '(shell-pop-term-shell "/usr/bin/zsh" t)
+   '(shell-pop-window-position 'bottom t)
+   '(shell-pop-window-size 60 t)
    '(smtpmail-smtp-server "smtp.gmail.com")
    '(smtpmail-smtp-service 25)
    '(timeclock-mode-line-display t)
    '(timeclock-use-display-time t nil (time))
+   '(treemacs-width 25)
    '(user-mail-address "mpbarbella@gmail.com")
    '(w3m-search-default-engine "duckduckgo")
    '(warning-suppress-types '((use-package))))
