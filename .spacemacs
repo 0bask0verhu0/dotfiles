@@ -32,7 +32,9 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(toml
+   '(vimscript
+     html
+     toml
      javascript
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
@@ -44,6 +46,7 @@ This function should only modify configuration layer settings."
      (c-c++ :variables c-c++-backend 'lsp-clangd)
      (conda
       :variables conda-anaconda-home "/home/bask_verhu/.conda")
+     (common-lisp)
      dap
      debug
      emacs-lisp
@@ -266,8 +269,9 @@ It should only modify the values of Spacemacs settings."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(gruber-darker
-                         hemisu-light)
+   dotspacemacs-themes '(hemisu-light
+                         gruber-darker
+                         hemisu-dark)
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
    ;; `all-the-icons', `custom', `doom', `vim-powerline' and `vanilla'. The
@@ -287,10 +291,10 @@ It should only modify the values of Spacemacs settings."
    ;; fixed-pitch faces. The `:size' can be specified as
    ;; a non-negative integer (pixel size), or a floating-point (point size).
    ;; Point size is recommended, because it's device independent. (default 10.0)
-   dotspacemacs-default-font '("Px437 IBM VGA9"
-                               :size 12.0
-                               :weight regular
-                               :width normal)
+   dotspacemacs-default-font '("Hermit"
+                               :size 10.5
+                               :weight medium
+                               )
 
    ;; The leader key (default "SPC")
    dotspacemacs-leader-key "SPC"
@@ -615,6 +619,9 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   ;; writerroom-mode binding
   (keymap-global-set "C-c x <f6>" 'writeroom-mode)
 
+  ;; use firefox to open URLs
+  (keymap-global-set "C-c x <f7>" 'browse-url-firefox)
+
 
   ;; vim-powerline
   (setq dotspacemacs-mode-line-theme 'vim-powerline)
@@ -643,8 +650,11 @@ dump."
   "Configuration for user code:
 This function is called at the very end of Spacemacs startup, after layer
 configuration.
-Put your configuration code here, except for variables that should be set
-before packages are loaded."
+Put your configuration code here, except for variables that should be set before packages are loaded."
+
+  ;; exwm
+  (setq package-archives '(("gnu-devel" . "https://elpa.gnu.org/devel/")
+                           ("nongnu-devel" . "https://elpa.nongnu.org/nongnu-devel/")))
 
   ;;org agenda files
   (setq org-agenda-files '("/home/bask_verhu/.agenda_files"))
@@ -815,13 +825,19 @@ This function is called at the very end of Spacemacs initialization."
    ;; If you edit it by hand, you could mess it up, so be careful.
    ;; Your init file should contain only one such instance.
    ;; If there is more than one, they won't work right.
+   '(battery-mode-line-format "[Chrg: %b%p Time: %t] ")
+   '(battery-update-interval 30)
    '(blink-cursor-mode t)
    '(browse-url-browser-function 'browse-url-firefox)
    '(cua-normal-cursor-color "gray")
    '(desktop-save t)
    '(desktop-save-mode t)
+   '(display-battery-mode t)
    '(display-time-day-and-date t)
    '(display-time-mode t)
+   '(eshell-buffer-maximum-lines 20000 t)
+   '(eshell-directory-name "~/.emacs.d/.cache/eshell/" t)
+   '(eshell-z-freq-dir-hash-table-file-name "~/.emacs.d/.cache/eshell/.z")
    '(evil-collection-want-unimpaired-p nil)
    '(evil-escape-mode t)
    '(evil-lion-mode t)
@@ -833,13 +849,17 @@ This function is called at the very end of Spacemacs initialization."
    '(evil-want-C-i-jump nil)
    '(evil-want-C-u-scroll t)
    '(evil-want-keybinding t)
+   '(fancy-battery-mode nil)
+   '(fancy-battery-show-percentage t)
    '(global-evil-surround-mode t)
    '(global-term-cursor-mode t)
    '(gnus-summary-resend-default-address nil)
    '(helm-default-external-file-browser "firefox")
    '(helm-surfraw-default-browser-function 'firefox)
+   '(helm-swoop-split-with-multiple-windows t t)
    '(importmagic-python-interpreter
      "home/bask_verhu/.conda/envs/myenv/CS314_spacemacs/bin/python2.7")
+   '(large-file-warning-threshold nil)
    '(message-send-mail-function 'message-send-mail-with-sendmail)
    '(message-signature t)
    '(mu4e-attachment-dir "~/Downloads/")
@@ -869,20 +889,73 @@ This function is called at the very end of Spacemacs initialization."
        (wl . wl-other-frame)))
    '(org-startup-with-latex-preview t)
    '(package-selected-packages
-     '(helm-w3m toml-mode cdlatex company-auctex company-math company-reftex evil-tex auctex consult math-symbol-lists importmagic ob-async xah-fly-keys jupyter websocket zmq blacken code-cells company-anaconda anaconda-mode conda cython-mode helm-pydoc epc ctable concurrent live-py-mode lsp-pyright pip-requirements pipenv load-env-vars pippel poetry py-isort pydoc pyenv-mode pythonic pylookup pytest pyvenv sphinx-doc yapfify ranger groovy-imports pcache groovy-mode maven-test-mode mvn doom-modeline shrink-path nerd-icons ox-pandoc pandoc-mode smudge oauth2 emms helm-spotify-plus multi spotify javadoc-lookup lsp-java elgrep obsidian add-node-modules-path counsel-gtags counsel swiper ivy ggtags impatient-mode import-js grizzl js-doc js2-refactor multiple-cursors livid-mode nodejs-repl npm-mode prettier-js skewer-mode js2-mode simple-httpd tern web-beautify helm-mu w3m pdf-view-restore pdf-tools tablist realgud test-simple loc-changes load-relative dap-mode lsp-docker bui ccls company-c-headers company-rtags company-ycmd cpp-auto-include disaster flycheck-rtags flycheck-ycmd gendoxy google-c-style helm-rtags rtags ycmd request-deferred afternoon-theme alect-themes ample-theme ample-zen-theme anti-zenburn-theme apropospriate-theme badwolf-theme birds-of-paradise-plus-theme bubbleberry-theme busybee-theme cherry-blossom-theme chocolate-theme clues-theme color-theme-sanityinc-solarized color-theme-sanityinc-tomorrow cyberpunk-theme dakrone-theme darkmine-theme darkokai-theme darktooth-theme django-theme doom-themes dracula-theme ef-themes espresso-theme exotica-theme eziam-themes farmhouse-themes flatland-theme flatui-theme gandalf-theme gotham-theme grandshell-theme gruvbox-theme hc-zenburn-theme hemisu-theme heroku-theme inkpot-theme ir-black-theme jazz-theme jbeans-theme kaolin-themes light-soap-theme lush-theme madhat2r-theme majapahit-themes material-theme minimal-theme modus-themes moe-theme molokai-theme monochrome-theme monokai-theme mustang-theme naquadah-theme noctilux-theme obsidian-theme occidental-theme oldlace-theme omtose-phellack-themes organic-green-theme phoenix-dark-mono-theme phoenix-dark-pink-theme planet-theme professional-theme purple-haze-theme railscasts-theme rebecca-theme reverse-theme seti-theme smyx-theme soft-charcoal-theme soft-morning-theme soft-stone-theme solarized-theme soothe-theme autothemer spacegray-theme subatomic-theme subatomic256-theme sublime-themes sunny-day-theme tango-2-theme tango-plus-theme tangotango-theme tao-theme toxi-theme twilight-anti-bright-theme twilight-bright-theme twilight-theme ujelly-theme underwater-theme white-sand-theme zen-and-art-theme zenburn-theme zonokai-emacs auto-dictionary auto-yasnippet code-review emojify deferred a eat esh-help eshell-prompt-extras eshell-z evil-org flycheck-pos-tip pos-tip flyspell-correct-helm flyspell-correct gh-md git-link git-messenger git-modes git-timemachine gitignore-templates gnuplot helm-c-yasnippet helm-company company helm-git-grep helm-ls-git helm-lsp helm-org-rifle htmlize lsp-origami origami lsp-treemacs lsp-ui lsp-mode markdown-toc multi-term multi-vterm xref mwim org-cliplink org-contrib org-download org-mime org-pomodoro alert log4e gntp org-present org-projectile org-project-capture org-category-capture org-rich-yank orgit-forge orgit forge yaml markdown-mode ghub closql emacsql treepy org shell-pop smeargle terminal-here treemacs-magit magit with-editor transient magit-section unfill vterm yasnippet-snippets yasnippet ws-butler writeroom-mode winum which-key vundo volatile-highlights vim-powerline vi-tilde-fringe uuidgen undo-fu-session undo-fu treemacs-projectile treemacs-persp treemacs-icons-dired treemacs-evil toc-org term-cursor symon symbol-overlay string-inflection string-edit-at-point spacemacs-whitespace-cleanup spacemacs-purpose-popwin spaceline space-doc restart-emacs request rainbow-delimiters quickrun popwin pcre2el password-generator paradox overseer org-superstar open-junk-file nameless multi-line macrostep lorem-ipsum link-hint inspector info+ indent-guide hybrid-mode hungry-delete holy-mode hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt helm-xref helm-themes helm-swoop helm-purpose helm-projectile helm-org helm-mode-manager helm-make helm-descbinds helm-comint helm-ag google-translate golden-ratio flycheck-package flycheck-elsa flx-ido fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-evilified-state evil-escape evil-easymotion evil-collection evil-cleverparens evil-args evil-anzu eval-sexp-fu emr elisp-slime-nav elisp-demos elisp-def editorconfig dumb-jump drag-stuff dotenv-mode disable-mouse dired-quick-sort diminish devdocs define-word column-enforce-mode clean-aindent-mode centered-cursor-mode auto-highlight-symbol auto-compile all-the-icons aggressive-indent ace-link ace-jump-helm-line))
+     '(devdocs-browser sass-mode haml-mode web-mode slime desktop-environment evil-exwm-state helm-exwm exwm xelb helm-w3m toml-mode cdlatex company-auctex company-math company-reftex evil-tex auctex consult math-symbol-lists importmagic ob-async xah-fly-keys jupyter websocket zmq blacken code-cells company-anaconda anaconda-mode conda cython-mode helm-pydoc epc ctable concurrent live-py-mode lsp-pyright pip-requirements pipenv load-env-vars pippel poetry py-isort pydoc pyenv-mode pythonic pylookup pytest pyvenv sphinx-doc yapfify ranger groovy-imports pcache groovy-mode maven-test-mode mvn doom-modeline shrink-path nerd-icons ox-pandoc pandoc-mode smudge oauth2 emms helm-spotify-plus multi spotify javadoc-lookup lsp-java elgrep obsidian add-node-modules-path counsel-gtags counsel swiper ivy ggtags impatient-mode import-js grizzl js-doc js2-refactor multiple-cursors livid-mode nodejs-repl npm-mode prettier-js skewer-mode js2-mode simple-httpd tern web-beautify helm-mu w3m pdf-view-restore pdf-tools tablist realgud test-simple loc-changes load-relative dap-mode lsp-docker bui ccls company-c-headers company-rtags company-ycmd cpp-auto-include disaster flycheck-rtags flycheck-ycmd gendoxy google-c-style helm-rtags rtags ycmd request-deferred afternoon-theme alect-themes ample-theme ample-zen-theme anti-zenburn-theme apropospriate-theme badwolf-theme birds-of-paradise-plus-theme bubbleberry-theme busybee-theme cherry-blossom-theme chocolate-theme clues-theme color-theme-sanityinc-solarized color-theme-sanityinc-tomorrow cyberpunk-theme dakrone-theme darkmine-theme darkokai-theme darktooth-theme django-theme doom-themes dracula-theme ef-themes espresso-theme exotica-theme eziam-themes farmhouse-themes flatland-theme flatui-theme gandalf-theme gotham-theme grandshell-theme gruvbox-theme hc-zenburn-theme hemisu-theme heroku-theme inkpot-theme ir-black-theme jazz-theme jbeans-theme kaolin-themes light-soap-theme lush-theme madhat2r-theme majapahit-themes material-theme minimal-theme modus-themes moe-theme molokai-theme monochrome-theme monokai-theme mustang-theme naquadah-theme noctilux-theme obsidian-theme occidental-theme oldlace-theme omtose-phellack-themes organic-green-theme phoenix-dark-mono-theme phoenix-dark-pink-theme planet-theme professional-theme purple-haze-theme railscasts-theme rebecca-theme reverse-theme seti-theme smyx-theme soft-charcoal-theme soft-morning-theme soft-stone-theme solarized-theme soothe-theme autothemer spacegray-theme subatomic-theme subatomic256-theme sublime-themes sunny-day-theme tango-2-theme tango-plus-theme tangotango-theme tao-theme toxi-theme twilight-anti-bright-theme twilight-bright-theme twilight-theme ujelly-theme underwater-theme white-sand-theme zen-and-art-theme zenburn-theme zonokai-emacs auto-dictionary auto-yasnippet code-review emojify deferred a eat esh-help eshell-prompt-extras eshell-z evil-org flycheck-pos-tip pos-tip flyspell-correct-helm flyspell-correct gh-md git-link git-messenger git-modes git-timemachine gitignore-templates gnuplot helm-c-yasnippet helm-company company helm-git-grep helm-ls-git helm-lsp helm-org-rifle htmlize lsp-origami origami lsp-treemacs lsp-ui lsp-mode markdown-toc multi-term multi-vterm xref mwim org-cliplink org-contrib org-download org-mime org-pomodoro alert log4e gntp org-present org-projectile org-project-capture org-category-capture org-rich-yank orgit-forge orgit forge yaml markdown-mode ghub closql emacsql treepy org shell-pop smeargle terminal-here treemacs-magit magit with-editor transient magit-section unfill vterm yasnippet-snippets yasnippet ws-butler writeroom-mode winum which-key vundo volatile-highlights vim-powerline vi-tilde-fringe uuidgen undo-fu-session undo-fu treemacs-projectile treemacs-persp treemacs-icons-dired treemacs-evil toc-org term-cursor symon symbol-overlay string-inflection string-edit-at-point spacemacs-whitespace-cleanup spacemacs-purpose-popwin spaceline space-doc restart-emacs request rainbow-delimiters quickrun popwin pcre2el password-generator paradox overseer org-superstar open-junk-file nameless multi-line macrostep lorem-ipsum link-hint inspector info+ indent-guide hybrid-mode hungry-delete holy-mode hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt helm-xref helm-themes helm-swoop helm-purpose helm-projectile helm-org helm-mode-manager helm-make helm-descbinds helm-comint helm-ag google-translate golden-ratio flycheck-package flycheck-elsa flx-ido fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-evilified-state evil-escape evil-easymotion evil-collection evil-cleverparens evil-args evil-anzu eval-sexp-fu emr elisp-slime-nav elisp-demos elisp-def editorconfig dumb-jump drag-stuff dotenv-mode disable-mouse dired-quick-sort diminish devdocs define-word column-enforce-mode clean-aindent-mode centered-cursor-mode auto-highlight-symbol auto-compile all-the-icons aggressive-indent ace-link ace-jump-helm-line))
+   '(remote-shell-program "/usr/bin/ssh")
+   '(safe-local-variable-values
+     '((eval cl-flet
+             ((enhance-imenu-lisp
+               (&rest keywords)
+               (dolist
+                   (keyword keywords)
+                 (let
+                     ((prefix
+                       (when
+                           (listp keyword)
+                         (cl-second keyword)))
+                      (keyword
+                       (if
+                           (listp keyword)
+                           (cl-first keyword)
+                         keyword)))
+                   (add-to-list 'lisp-imenu-generic-expression
+                                (list
+                                 (purecopy
+                                  (concat
+                                   (capitalize keyword)
+                                   (if
+                                       (string=
+                                        (substring-no-properties keyword -1)
+                                        "s")
+                                       "es" "s")))
+                                 (purecopy
+                                  (concat "^\\s-*("
+                                          (regexp-opt
+                                           (list
+                                            (if prefix
+                                                (concat prefix "-" keyword)
+                                              keyword)
+                                            (concat prefix "-" keyword))
+                                           t)
+                                          "\\s-+\\(" lisp-mode-symbol-regexp "\\)"))
+                                 2))))))
+             (enhance-imenu-lisp
+              '("bookmarklet-command" "define")
+              '("class" "define")
+              '("command" "define")
+              '("ffi-method" "define")
+              '("ffi-generic" "define")
+              '("function" "define")
+              '("internal-page-command" "define")
+              '("internal-page-command-global" "define")
+              '("mode" "define")
+              '("parenscript" "define")
+              "defpsmacro"))
+       (javascript-backend . tide)
+       (javascript-backend . tern)
+       (javascript-backend . lsp)))
    '(send-mail-function 'sendmail-send-it)
    '(server-mode t)
    '(sh-shell-file "/usr/bin/zsh")
-   '(shell-default-height 60)
+   '(shell-default-height 65)
    '(shell-file-name "/usr/bin/zsh")
-   '(shell-pop-full-span t t)
+   '(shell-pop-full-span t)
    '(shell-pop-shell-type
      '("ansi-term" "*Default-ansi-term*"
        (lambda nil
          (ansi-term shell-pop-term-shell))))
-   '(shell-pop-term-shell "/usr/bin/zsh" t)
-   '(shell-pop-window-position 'bottom t)
-   '(shell-pop-window-size 60 t)
+   '(shell-pop-term-shell "/usr/bin/zsh")
+   '(shell-pop-window-position 'bottom)
+   '(shell-pop-window-size 30)
    '(smtpmail-smtp-server "smtp.gmail.com")
    '(smtpmail-smtp-service 25)
    '(timeclock-mode-line-display t)
@@ -897,5 +970,7 @@ This function is called at the very end of Spacemacs initialization."
    ;; Your init file should contain only one such instance.
    ;; If there is more than one, they won't work right.
    '(default ((t (:background nil))))
-   '(evil-mc-cursor-bar-face ((t nil))))
+   '(header-line ((t (:background "chartreuse3" :foreground "black"))))
+   '(helm-minibuffer-prompt ((t (:inherit minibuffer-prompt :extend t :foreground "black"))))
+   '(helm-swoop-target-word-face ((t (:background "magenta" :foreground "cyan")))))
   )
