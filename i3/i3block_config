@@ -5,29 +5,21 @@
 #
 #     https://vivien.github.io/i3blocks
 
-
 # Global properties
 separator=true
-separator_block_width=15
+separator_block_width=17
 
+[github]
+command=$SCRIPT_DIR/github/github
+interval=20
+format=json
+markup=pango
 
-
-[iface]
-command=$SCRIPT_DIR/iface/iface
-LABEL=wlan0:
-IFACE=wlan0
-ADDRESS_FAMILY=inet6?
-color=#00FF00
+[docker]
+command=$SCRIPT_DIR/docker/docker
+color=#0db7ed
 interval=10
-# set this to 1 to display the name of the connected WIFI interface instead of the IP address.
-display_wifi_name=1
-BLOCK_BUTTON=1
-
-[wifi]
-command=$SCRIPT_DIR/wifi/wifi
-label=wifi:
-#INTERFACE=wlan0
-interval=30
+LABEL=🐳
 
 [volume]
 command=$SCRIPT_DIR/volume/volume
@@ -36,9 +28,12 @@ interval=once
 signal=10
 STEP=5%
 
-#[brightness]
-#command=$SCRIPT_DIR/brightness/bin/brightness
-#interval=persist
+[backlight]
+command=$SCRIPT_DIR/backlight/backlight
+label=☀
+interval=2
+STEP_SIZE=5
+USE_SUDO=0
 
 [cpu_usage]
 command=$SCRIPT_DIR/cpu_usage/cpu_usage
@@ -67,7 +62,29 @@ LABEL=DISK:
 ALERT_LOW=10
 interval=30
 
+[iface]
+command=$SCRIPT_DIR/iface/iface
+#LABEL=wlan0:
+IFACE=wlan0
+ADDRESS_FAMILY=inet6?
+color=#00FF00
+interval=10
+# set this to 1 to display the name of the connected WIFI interface instead of the IP address.
+display_wifi_name=1
+BLOCK_BUTTON=1
 
+[wifi]
+command=$SCRIPT_DIR/wifi/wifi
+#label=wifi:
+#INTERFACE=wlan0
+interval=30
+
+[battery]
+command=$SCRIPT_DIR/battery/battery
+interval=60
+#LABEL=Bat
+LABEL=⚡
+BAT_NUMBER=0
 
 [temperature]
 command=$SCRIPT_DIR/temperature/temperature
@@ -77,12 +94,23 @@ WARN=70
 T_CRIT=90
 #SENSOR_CHIP=""
 
-[battery]
-command=$SCRIPT_DIR/battery/battery
-interval=60
-#LABEL=Bat
-LABEL=⚡
-BAT_NUMBER=0
+[monitors]
+command=$SCRIPT_DIR/monitor_manager/monitor_manager
+interval=once
+SHOW_ON_OFF=1
+SHOW_NAMES=1
+SHOW_PRIMARY=1
+SHOW_MODE=1
+SHOW_BLANKED=1
+SHOW_DUPLICATE=1
+SHOW_ROTATION=1
+SHOW_REFLECTION=1
+SHOW_BRIGHTNESS=1
+SHOW_BRIGHTNESS_VALUE=0
+SHOW_UP_DOWN=1
+FONT_FAMILY=Hermit
+FONT_SIZE=11
+CLOSE_TO_BOUNDARY_BUFFER=20
 
 [rofi-calendar]
 command=$SCRIPT_DIR/rofi-calendar/rofi-calendar
@@ -91,7 +119,7 @@ BAR_POSITION=bottom
 WEEK_START=monday
 DATEFTM=+%a %d %b %Y
 SHORTFMT=+%d/%m/%Y
-LABEL= 
+LABEL=
 FONT=Hermit 10.5
 #LEFTCLICK_PREV_MONTH=false
 PREV_MONTH_TEXT=« previous month «
@@ -100,6 +128,6 @@ NEXT_MONTH_TEXT=» next month »
 [time]
 command=$SCRIPT_DIR/time/time
 interval=1
+TZ_FILE=~/.tz
 STRFTIME_FORMAT=%l:%M %p
-#TZONES=$DEFAULT_TZ
-TZ_LABELS=MST
+TZ_LABELS=MT
