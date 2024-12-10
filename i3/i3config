@@ -188,27 +188,28 @@ bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcu
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
-        # These bindings trigger as soon as you enter the resize mode
+    # These bindings trigger as soon as you enter the resize mode
 
-        # Pressing left will shrink the window’s width.
-        # Pressing right will grow the window’s width.
-        # Pressing up will shrink the window’s height.
-        # Pressing down will grow the window’s height.
-        bindsym h resize shrink width 30 px or 30 ppt
-        bindsym j resize grow height 30 px or 10 ppt
-        bindsym k resize shrink height 30 px or 30 ppt
-        bindsym l resize grow width 30 px or 30 ppt
+    # Pressing left will shrink the window’s width.
+    # Pressing right will grow the window’s width.
+    # Pressing up will shrink the window’s height.
+    # Pressing down will grow the window’s height.
+    bindsym h resize shrink width 30 px or 30 ppt
+    bindsym j resize grow height 30 px or 10 ppt
+    bindsym k resize shrink height 30 px or 30 ppt
+    bindsym l resize grow width 30 px or 30 ppt
 
-        # same bindings, but for the arrow keys
-        bindsym Left resize shrink width 30 px or 30 ppt
-        bindsym Down resize grow height 30 px or 30 ppt
-        bindsym Up resize shrink height 30 px or 30 ppt
-        bindsym Right resize grow width 30 px or 30 ppt
+    # same bindings, but for the arrow keys
+    bindsym Left resize shrink width 30 px or 30 ppt
+    bindsym Down resize grow height 30 px or 30 ppt
+    bindsym Up resize shrink height 30 px or 30 ppt
+    bindsym Right resize grow width 30 px or 30 ppt
 
-        # back to normal: Enter or Escape or $mod+r
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
-        bindsym $mod+r mode "default"
+    # back to normal: Enter or Escape or $mod+r
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym $mod+r mode "default"
+    bindsym space  mode "default"
 }
 
 bindsym $mod+r mode "resize"
@@ -217,22 +218,56 @@ bindsym $mod+r mode "resize"
 
 mode "launcher" {
 
-        bindsym d exec                 emacs --daemon         #[d]aemon for emacs
-        bindsym e exec --no-startup-id emacsclient -c -n      #[e]macs
-        bindsym f exec --no-startup-id firefox                #[f]irefox
-        bindsym k exec                 konsole                #[k]onsole
-        bindsym o exec --no-startup-id obsidian --disable-gpu #[o]bsidian
-        bindsym t exec --no-startup-id thunar                 #[t]hunar
-        bindsym v exec --no-startup-id code --disable-gpu     #[v]scode
+    bindsym d exec                 emacs --daemon         #[d]aemon for emacs
+    bindsym e exec --no-startup-id emacsclient -c -n      #[e]macs
+    bindsym f exec --no-startup-id firefox                #[f]irefox
+    bindsym k exec                 konsole                #[k]onsole
+    bindsym n exec --no-startup-id nyxt                   #[n]yxt
+    bindsym o exec --no-startup-id obsidian --disable-gpu #[o]bsidian
+    bindsym t exec --no-startup-id thunar                 #[t]hunar
+    bindsym v exec --no-startup-id code --disable-gpu     #[v]scode
 
-        # back to normal: Enter or Escape or $mod+o
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
-        bindsym $mod+o mode "default"
-        bindsym Tab    mode "default"
+    # back to normal: Enter or Escape or $mod+o
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym $mod+o mode "default"
+    bindsym Tab    mode "default"
+    bindsym space  mode "default"
 }
 
 bindsym $mod+o mode "launcher"
+
+mode "emacs-daemon" {
+
+    bindsym 1 exec emacsclient -c -n -s one
+    bindsym 2 exec emacsclient -c -n -s two
+    bindsym 3 exec emacsclient -c -n -s three
+    bindsym 4 exec emacsclient -c -n -s four
+
+    # back to normal: Enter or Escape or $mod+o
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym $mod+x mode "default"
+    bindsym Tab    mode "default"
+    bindsym space  mode "default"
+}
+
+bindsym $mod+x mode "emacs-daemon"
+
+mode "spawn-daemon" {
+    bindsym 1 exec emacs --daemon=one
+    bindsym 2 exec emacs --daemon=two
+    bindsym 3 exec emacs --daemon=three
+    bindsym 4 exec emacs --daemon=four
+
+    # back to default/emacs-daemon: Enter or Escape or $mod+o
+    bindsym Return mode       "emacs-daemon"
+    bindsym Escape mode       "emacs-daemon"
+    bindsym $mod+Shift+S mode "emacs-daemon"
+    bindsym Tab    mode       "emacs-daemon"
+    bindsym space  mode       "default"
+}
+bindsym $mod+Shift+S mode "spawn-daemon"
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
@@ -242,6 +277,15 @@ bar {
         modifier none
         tray_output primary
 }
+
+#Make the currently focused window a scratchpad
+bindsym $mod+Shift+minus move scratchpad
+
+#Show the first scratchpad window
+bindsym $mod+minus scratchpad show
+
+#Show the sup-mail scratchpad window, if any
+#bindsym mod4+s [title="^Sup ::"] scratchpad show
 
 # disable touchpad
 bindsym XF86TouchpadToggle exec /usr/local/bin/touchpad_toggle.sh
@@ -254,7 +298,7 @@ bindsym Print  exec --no-startup-id flameshot screen --path /home/bask_verhu/Pic
 bindsym $mod+m bar mode toggle
 
 # start emacs servers
-exec emacs --daemon
+exec emacs --daemon=one
 exec emacs --daemon=two
 
 
